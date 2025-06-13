@@ -1,4 +1,4 @@
-const API_KEY = 'MOCK_API_KEY'; // Replace with your real key
+const API_KEY = 'RwB_yFyYIQ59h_1JdXMqkmsz8UZS9GvQWbgQuQfKWLU'; // Replace with your Unsplash API Key
 const searchForm = document.getElementById('search-form');
 const queryInput = document.getElementById('query');
 const resultsDiv = document.getElementById('results');
@@ -23,25 +23,19 @@ async function searchImages() {
   resultsDiv.innerHTML = '';
 
   try {
-    const response = await fetch(`https://api.pexels.com/v1/search?query=${currentQuery}&per_page=15&page=${currentPage}`, {
-      headers: {
-        Authorization: API_KEY
-      }
-    });
+    const response = await fetch(`https://api.unsplash.com/search/photos?query=${currentQuery}&per_page=15&page=${currentPage}&client_id=${API_KEY}`);
 
     if (!response.ok) {
       throw new Error('API request failed');
     }
 
     const data = await response.json();
-    displayImages(data.photos);
+    displayImages(data.results);
     paginationDiv.classList.remove('hidden');
 
-    // Disable prev button if on first page
     prevBtn.disabled = currentPage === 1;
 
-    // Hide pagination if no photos returned (end of results)
-    if (data.photos.length === 0) {
+    if (data.results.length === 0) {
       paginationDiv.classList.add('hidden');
     }
 
@@ -60,14 +54,13 @@ function displayImages(photos) {
 
   resultsDiv.innerHTML = photos.map(photo => `
     <div class="image-card">
-      <a href="${photo.src.original}" target="_blank">
-        <img src="${photo.src.medium}" alt="${photo.alt}">
+      <a href="${photo.links.html}" target="_blank">
+        <img src="${photo.urls.small}" alt="${photo.alt_description || 'Image'}">
       </a>
     </div>
   `).join('');
 }
 
-// Pagination buttons
 nextBtn.addEventListener('click', () => {
   currentPage++;
   searchImages();
@@ -83,7 +76,6 @@ prevBtn.addEventListener('click', () => {
 // Theme Toggle
 const themeToggleBtn = document.getElementById('theme-toggle');
 
-// Load theme from localStorage on page load
 document.addEventListener('DOMContentLoaded', () => {
   const theme = localStorage.getItem('theme') || 'light';
   setTheme(theme);
@@ -111,4 +103,3 @@ function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('theme', theme);
 }
-
