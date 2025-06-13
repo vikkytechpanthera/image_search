@@ -136,6 +136,9 @@ button:hover {
   .image-card {
     margin-bottom: 15px;
   }
+  .form {
+    flex-wrap: nowrap;
+  }
 }
 
 #pagination {
