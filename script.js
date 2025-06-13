@@ -54,12 +54,32 @@ function displayImages(photos) {
 
   resultsDiv.innerHTML = photos.map(photo => `
     <div class="image-card">
-      <a href="${photo.links.html}" target="_blank">
-        <img src="${photo.urls.small}" alt="${photo.alt_description || 'Image'}">
-      </a>
+      <div class="image-container">
+        <a href="${photo.links.html}" target="_blank">
+          <img src="${photo.urls.regular}" alt="${photo.alt_description || 'Image'}">
+        </a>
+        <a href="${photo.urls.full}" download class="download-btn" title="Download">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#fff" viewBox="0 0 24 24">
+            <path d="M5 20h14v-2H5v2zm7-18L5.33 10h3.67v4h4v-4h3.67L12 2z"/>
+          </svg>
+        </a>
+      </div>
     </div>
   `).join('');
+
+  // Call fade-in after images loaded
+  addImageLoadEffect();
 }
+
+function addImageLoadEffect() {
+  const images = document.querySelectorAll('.image-card img');
+  images.forEach(img => {
+    img.addEventListener('load', () => {
+      img.style.opacity = '1';
+    });
+  });
+}
+
 
 nextBtn.addEventListener('click', () => {
   currentPage++;
